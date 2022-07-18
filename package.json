@@ -1,0 +1,30 @@
+{
+  "name": "simple-chat-node",
+  "version": "1.0.0",
+  "description": "my first socket.io app",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bellsilver7/simple-chat-node.git"
+  },
+  "keywords": [
+    "chat",
+    "simple chat",
+    "node",
+    "node chat"
+  ],
+  "author": "bellsilver7",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bellsilver7/simple-chat-node/issues"
+  },
+  "homepage": "https://github.com/bellsilver7/simple-chat-node#readme",
+  "dependencies": {
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19"
+  }
+}
