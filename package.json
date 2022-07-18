@@ -25,6 +25,7 @@
   "homepage": "https://github.com/bellsilver7/simple-chat-node#readme",
   "dependencies": {
     "express": "^4.18.1",
-    "nodemon": "^2.0.19"
+    "nodemon": "^2.0.19",
+    "socket.io": "^4.5.1"
   }
 }
