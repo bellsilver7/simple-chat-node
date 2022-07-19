@@ -10,7 +10,7 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
+  io.emit("chat message", "some user connected");
 
   socket.broadcast.emit("hi");
 
@@ -19,7 +19,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    console.log("user disconnected");
+    io.emit("chat message", "some user disconnected");
   });
 });
 
@@ -28,6 +28,6 @@ io.emit("some event", {
   otherProperty: "other value",
 }); // This will emit the event to all connected sockets
 
-server.listen(3000, () => {
-  console.log("listening on *:3000");
+server.listen(3002, () => {
+  console.log("listening on *:3002");
 });
