@@ -4,7 +4,7 @@ Simple chat in node.js(with socket.io)
 
 ## Homework
 
-- [x] Broadcast a message to connected users when someone connects or disconnects.
+- [o] Broadcast a message to connected users when someone connects or disconnects.
 
 - [ ] Add support for nicknames.
 
