@@ -10,16 +10,21 @@ app.get("/", (req, res) => {
 });
 
 io.on("connection", (socket) => {
-  io.emit("chat message", "some user connected");
-
-  socket.broadcast.emit("hi");
+  socket.on("new user", (nickname) => {
+    socket.nickname = nickname;
+    io.emit("chat message", `${nickname}가 들어왔어요.`);
+  });
 
   socket.on("chat message", (msg) => {
-    io.emit("chat message", msg);
+    const date = new Date();
+    const currentTime = `${date.getFullYear()}-${
+      date.getMonth() + 1
+    }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    io.emit("chat message", `[${socket.nickname}] ${msg} (${currentTime})`);
   });
 
   socket.on("disconnect", () => {
-    io.emit("chat message", "some user disconnected");
+    io.emit("chat message", `${socket.nickname}가 나갔어요.`);
   });
 });
 

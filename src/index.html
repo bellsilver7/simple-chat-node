@@ -56,18 +56,40 @@
     </style>
   </head>
   <body>
-    <ul id="messages"></ul>
-    <form id="form" action="">
-      <input id="input" autocomplete="off" /><button>Send</button>
+    <form id="nicknameForm">
+      <input type="text" id="nickname" value="" />
+      <button>입장</button>
     </form>
+    <div id="chatRoom" style="display: none">
+      <ul id="messages"></ul>
+      <form id="form" action="">
+        <input id="input" autocomplete="off" /><button>Send</button>
+      </form>
+    </div>
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      var socket = io();
+      let socket = io();
 
-      var messages = document.getElementById("messages");
-      var form = document.getElementById("form");
-      var input = document.getElementById("input");
+      let nicknameForm = document.getElementById("nicknameForm");
+      let nickname = document.getElementById("nickname");
+      let chatRoom = document.getElementById("chatRoom");
+      let messages = document.getElementById("messages");
+      let form = document.getElementById("form");
+      let input = document.getElementById("input");
+
+      nicknameForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        if (nickname.value === "") {
+          alert("닉네임을 입력해주세요.");
+          nickname.focus();
+        }
+
+        socket.emit("new user", nickname.value);
+
+        nicknameForm.remove();
+        chatRoom.style.display = "block";
+      });
 
       form.addEventListener("submit", function (e) {
         e.preventDefault();
