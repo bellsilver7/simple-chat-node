@@ -16,11 +16,14 @@ io.on("connection", (socket) => {
   });
 
   socket.on("chat message", (msg) => {
+    const message = msg.trim();
+
+    if (message === socket.chatMessage) return;
+    socket.chatMessage = message;
+
     const date = new Date();
-    const currentTime = `${date.getFullYear()}-${
-      date.getMonth() + 1
-    }-${date.getDate()} ${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    io.emit("chat message", `[${socket.nickname}] ${msg} (${currentTime})`);
+    const currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
+    io.emit("chat message", `${socket.nickname}: ${message} (${currentTime})`);
   });
 
   socket.on("disconnect", () => {
