@@ -61,6 +61,7 @@
       <button>입장</button>
     </form>
     <div id="chatRoom" style="display: none">
+      <div id="typing"></div>
       <ul id="messages"></ul>
       <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
@@ -69,14 +70,20 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script>
-      let socket = io();
+      const socket = io();
 
-      let nicknameForm = document.getElementById("nicknameForm");
-      let nickname = document.getElementById("nickname");
-      let chatRoom = document.getElementById("chatRoom");
-      let messages = document.getElementById("messages");
-      let form = document.getElementById("form");
-      let input = document.getElementById("input");
+      const nicknameForm = document.getElementById("nicknameForm");
+      const nickname = document.getElementById("nickname");
+      const chatRoom = document.getElementById("chatRoom");
+      const messages = document.getElementById("messages");
+      const form = document.getElementById("form");
+      const input = document.getElementById("input");
+      const typing = document.getElementById("typing");
+
+      let timeout;
+      function timeoutFunction() {
+        socket.emit("is typing", "");
+      }
 
       nicknameForm.addEventListener("submit", function (e) {
         e.preventDefault();
@@ -96,6 +103,20 @@
         if (input.value) {
           socket.emit("chat message", input.value);
           input.value = "";
+          timeoutFunction();
+        }
+      });
+
+      input.addEventListener("keyup", function (e) {
+        socket.emit("is typing", nickname.value);
+        clearTimeout(timeout);
+        timeout = setTimeout(timeoutFunction, 2000);
+      });
+
+      socket.on("is typing", function (nickname) {
+        typing.innerText = "";
+        if (nickname) {
+          typing.innerText = `${nickname}이(가) 작성중`;
         }
       });
 

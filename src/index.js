@@ -12,7 +12,11 @@ app.get("/", (req, res) => {
 io.on("connection", (socket) => {
   socket.on("new user", (nickname) => {
     socket.nickname = nickname;
-    io.emit("chat message", `${nickname}가 들어왔어요.`);
+    io.emit("chat message", `${nickname}이(가) 들어왔어요.`);
+  });
+
+  socket.on("is typing", (nickname) => {
+    socket.broadcast.emit("is typing", nickname);
   });
 
   socket.on("chat message", (msg) => {
@@ -27,7 +31,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
-    io.emit("chat message", `${socket.nickname}가 나갔어요.`);
+    io.emit("chat message", `${socket.nickname}이(가) 나갔어요.`);
   });
 });
 
