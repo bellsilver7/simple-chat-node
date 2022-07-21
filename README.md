@@ -8,7 +8,7 @@ Simple chat in node.js(with socket.io)
 
 - [x] Add support for nicknames.
 
-- [ ] Don’t send the same message to the user that sent it. Instead, append the message directly as soon as he/she presses enter.
+- [x] Don’t send the same message to the user that sent it. Instead, append the message directly as soon as he/she presses enter.
 
 - [ ] Add “{user} is typing” functionality.
 
