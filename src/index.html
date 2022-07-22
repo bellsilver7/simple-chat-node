@@ -62,6 +62,7 @@
     </form>
     <div id="chatRoom" style="display: none">
       <div id="typing"></div>
+      <ul id="online"></ul>
       <ul id="messages"></ul>
       <form id="form" action="">
         <input id="input" autocomplete="off" /><button>Send</button>
@@ -79,6 +80,7 @@
       const form = document.getElementById("form");
       const input = document.getElementById("input");
       const typing = document.getElementById("typing");
+      const online = document.getElementById("online");
 
       let timeout;
       function timeoutFunction() {
@@ -111,6 +113,20 @@
         socket.emit("is typing", nickname.value);
         clearTimeout(timeout);
         timeout = setTimeout(timeoutFunction, 2000);
+      });
+
+      socket.on("online", function (users) {
+        online.innerHTML = "";
+        users.forEach((user) => {
+          let item = document.createElement("li");
+          item.innerText = user;
+          item.id = "on_" + user;
+          online.append(item);
+        });
+      });
+
+      socket.on("offline", function (user) {
+        document.getElementById("on_" + user).remove();
       });
 
       socket.on("is typing", function (nickname) {

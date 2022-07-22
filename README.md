@@ -12,7 +12,7 @@ Simple chat in node.js(with socket.io)
 
 - [x] Add “{user} is typing” functionality.
 
-- [ ] Show who’s online.
+- [x] Show who’s online.
 
 - [ ] Add private messaging.
 

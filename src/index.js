@@ -9,9 +9,12 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
+let users = [];
 io.on("connection", (socket) => {
   socket.on("new user", (nickname) => {
     socket.nickname = nickname;
+    users.push(nickname);
+    io.emit("online", users);
     io.emit("chat message", `${nickname}이(가) 들어왔어요.`);
   });
 
@@ -31,6 +34,8 @@ io.on("connection", (socket) => {
   });
 
   socket.on("disconnect", () => {
+    users.splice(socket.nickname);
+    io.emit("offline", socket.nickname);
     io.emit("chat message", `${socket.nickname}이(가) 나갔어요.`);
   });
 });
