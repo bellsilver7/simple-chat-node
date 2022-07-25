@@ -60,6 +60,7 @@
       <input type="text" id="nickname" value="" />
       <button>입장</button>
     </form>
+    <ul id="chatRooms" style="display: none"></ul>
     <div id="chatRoom" style="display: none">
       <div id="typing"></div>
       <ul id="online"></ul>
@@ -75,6 +76,7 @@
 
       const nicknameForm = document.getElementById("nicknameForm");
       const nickname = document.getElementById("nickname");
+      const chatRooms = document.getElementById("chatRooms");
       const chatRoom = document.getElementById("chatRoom");
       const messages = document.getElementById("messages");
       const form = document.getElementById("form");
@@ -97,7 +99,7 @@
         socket.emit("new user", nickname.value);
 
         nicknameForm.remove();
-        chatRoom.style.display = "block";
+        chatRooms.style.display = "block";
       });
 
       form.addEventListener("submit", function (e) {
@@ -122,6 +124,27 @@
           item.innerText = user;
           item.id = "on_" + user;
           online.append(item);
+        });
+      });
+
+      socket.on("room list", function (rooms) {
+        rooms.forEach((room) => {
+          let item = document.createElement("li");
+          let button = document.createElement("button");
+          button.addEventListener("click", function (e) {
+            e.preventDefault();
+            socket.emit("join room", e.target.value);
+            chatRooms.innerHTML = "";
+            chatRooms.style.display = "none";
+            chatRoom.style.display = "block";
+          });
+          item.textContent = room.title;
+          button.id = "joinRoomBtn";
+          button.value = room.id;
+          button.innerText = "입장";
+          item.appendChild(button);
+          chatRooms.appendChild(item);
+          window.scrollTo(0, document.body.scrollHeight);
         });
       });
 

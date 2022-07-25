@@ -9,17 +9,38 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
+let rooms = [
+  { id: "room_1", title: "채팅방1" },
+  { id: "room_2", title: "채팅방2" },
+  { id: "room_3", title: "채팅방3" },
+];
 let users = [];
+
+function handleJoinRoom(roomId) {
+  currentRoomId = roomId;
+  this.roomIo.emit("join room", roomId);
+}
+
 io.on("connection", (socket) => {
+  let currentRoomId = "";
+  let roomIo = null;
+
   socket.on("new user", (nickname) => {
     socket.nickname = nickname;
-    users.push(nickname);
-    io.emit("online", users);
-    io.emit("chat message", `${nickname}이(가) 들어왔어요.`);
+    io.emit("room list", rooms);
+  });
+
+  socket.on("join room", (roomId) => {
+    // roomId = "room_" + socket.id;
+    roomIo = io.to(roomId);
+    socket.join(roomId);
+    users.push(socket.nickname);
+    roomIo.emit("online", users);
+    roomIo.emit("chat message", `${socket.nickname}이(가) 들어왔어요.`);
   });
 
   socket.on("is typing", (nickname) => {
-    socket.broadcast.emit("is typing", nickname);
+    socket.join(currentRoomId).broadcast.emit("is typing", nickname);
   });
 
   socket.on("chat message", (msg) => {
@@ -30,20 +51,18 @@ io.on("connection", (socket) => {
 
     const date = new Date();
     const currentTime = `${date.getHours()}:${date.getMinutes()}:${date.getSeconds()}`;
-    io.emit("chat message", `${socket.nickname}: ${message} (${currentTime})`);
+    roomIo.emit(
+      "chat message",
+      `${socket.nickname}: ${message} (${currentTime})`
+    );
   });
 
   socket.on("disconnect", () => {
     users.splice(socket.nickname);
-    io.emit("offline", socket.nickname);
-    io.emit("chat message", `${socket.nickname}이(가) 나갔어요.`);
+    roomIo.emit("offline", socket.nickname);
+    roomIo.emit("chat message", `${socket.nickname}이(가) 나갔어요.`);
   });
 });
-
-io.emit("some event", {
-  someProperty: "some value",
-  otherProperty: "other value",
-}); // This will emit the event to all connected sockets
 
 server.listen(3002, () => {
   console.log("listening on *:3002");
