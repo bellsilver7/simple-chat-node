@@ -128,7 +128,8 @@
       });
 
       socket.on("room list", function (rooms) {
-        rooms.forEach((room) => {
+        console.log(rooms);
+        for (let id in rooms) {
           let item = document.createElement("li");
           let button = document.createElement("button");
           button.addEventListener("click", function (e) {
@@ -138,14 +139,16 @@
             chatRooms.style.display = "none";
             chatRoom.style.display = "block";
           });
-          item.textContent = room.title;
+
+          item.textContent = rooms[id].title;
+
           button.id = "joinRoomBtn";
-          button.value = room.id;
+          button.value = id;
           button.innerText = "입장";
           item.appendChild(button);
           chatRooms.appendChild(item);
           window.scrollTo(0, document.body.scrollHeight);
-        });
+        }
       });
 
       socket.on("offline", function (user) {

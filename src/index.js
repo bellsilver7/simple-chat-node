@@ -9,18 +9,12 @@ app.get("/", (req, res) => {
   res.sendFile(__dirname + "/index.html");
 });
 
-let rooms = [
-  { id: "room_1", title: "채팅방1" },
-  { id: "room_2", title: "채팅방2" },
-  { id: "room_3", title: "채팅방3" },
-];
+let rooms = {
+  room_1: { title: "채팅방1", users: [] },
+  room_2: { title: "채팅방2", users: [] },
+  room_3: { title: "채팅방3", users: [] },
+};
 let users = [];
-
-function handleJoinRoom(roomId) {
-  currentRoomId = roomId;
-  this.roomIo.emit("join room", roomId);
-}
-
 io.on("connection", (socket) => {
   let currentRoomId = "";
   let roomIo = null;
@@ -34,8 +28,8 @@ io.on("connection", (socket) => {
     // roomId = "room_" + socket.id;
     roomIo = io.to(roomId);
     socket.join(roomId);
-    users.push(socket.nickname);
-    roomIo.emit("online", users);
+    rooms[roomId].users.push(socket.nickname);
+    roomIo.emit("online", rooms[roomId].users);
     roomIo.emit("chat message", `${socket.nickname}이(가) 들어왔어요.`);
   });
 
