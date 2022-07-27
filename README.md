@@ -14,6 +14,6 @@ Simple chat in node.js(with socket.io)
 
 - [x] Show who’s online.
 
-- [ ] Add private messaging.
+- [x] Add private messaging.
 
-- [ ] Share your improvements!
+- [x] Share your improvements!
